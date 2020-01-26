@@ -1,0 +1,1 @@
+PROMPT='%F{green}${${KEYMAP/vicmd/N}/(main|viins)/I}'$PROMPT

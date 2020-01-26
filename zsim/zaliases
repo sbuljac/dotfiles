@@ -1,0 +1,211 @@
+#============================================================
+#
+#  ALIASES AND FUNCTIONS
+#
+#  Arguably, some functions defined here are quite big.
+#  If you want to make this file smaller, these functions can
+#+ be converted into scripts and removed from here.
+#
+#============================================================
+#tunnelbrick
+alias connectTunnel=osascript -e "tell application 'Tunnelblick'" -e "connect 'sime'" -e "end tell"
+#dns
+alias flushDns="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache"
+#Parity
+alias tuneParity="ssh -i "~/.ssh/simAwsEast.pem" -L 8545:127.0.0.1:8545 -L 8546:127.0.0.1:8546 -L 8180:127.0.0.1:8180 ubuntu@ec2-54-173-232-218.compute-1.amazonaws.com -vv"
+alias tuneDebuger="ssh -i "~/.ssh/roomi-ssh-key-new-08Nov17.pem" -L 9230:127.0.0.1:9230 -L 9231:127.0.0.1:9231 -L 9232:127.0.0.1:9232 -L 9233:127.0.0.1:9233"
+#ssh -i "roomi-ssh-key-new-08Nov17.pem" ec2-user@ec2-34-217-195-39.us-west-2.compute.amazonaws.com
+
+#Roomi
+alias tunelRedis="ssh -v -L  6379:redis-test2.ohydqk.0001.usw2.cache.amazonaws.com:6379 jenkins"
+alias mongoRoomiProductio="mongo ds023071-a0.nqb81.fleet.mlab.com:23071/roomi0 -u sbuljac -p yAhjIRfIm2dX7G2o4bAJRVDCnJQRSMUl"
+#Plasma fix
+alias plasmafix="kquitapp5 plasmashell ; /usr/bin/plasmashell --shut-up"
+#git
+alias g=git
+alias gd="git diff|bat --color always"
+alias gskip="HUSKY_SKIP_HOOKS=1 git"
+alias c=curl
+alias y=yarn
+alias gs="git status"
+alias gg="git grep"
+alias ggrap="git log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'"
+alias gRemoveMergeBranches="git branch --merged master | grep -v '^\*' | xargs -n 1 git branch -d"
+#Tag generation
+alias tags_generation_angular=ctags -R --fields=+l -f ./tags ./
+#Nvidia
+nvidia-set-hdmi-monitor() {
+  pkill pasystray
+  pkill nm-applet
+  nvidia-settings --assign CurrentMetaMode="HDMI-0: 1920x1080_60 +1600+0  { ForceFullCompositionPipeline = On   }"
+  nm-applet &
+  pasystray &
+  ~/scripts/myRemapedKeys.sh
+}
+nvidia-set-lvds-monitor() {
+  pkill pasystray
+  pkill nm-applet
+  nvidia-settings --assign CurrentMetaMode="LVDS-0: 1600x900_60 +0+0  { ForceFullCompositionPipeline = On   }"
+  nm-applet &
+  pasystray &
+  ~/scripts/myRemapedKeys.sh
+}
+nvidia-set-both() {
+  pkill pasystray
+  pkill nm-applet
+  nvidia-settings --assign CurrentMetaMode="LVDS-0: 1600x900_60 +0+0  { ForceFullCompositionPipeline = On    }, HDMI-0: 1920x1080_60 +1600+0  { ForceFullCompositionPipeline = On    }"
+  nm-applet &
+  pasystray &
+  ~/scripts/myRemapedKeys.sh
+}
+#Connect microfone
+alias micToheadphonesOn="pactl load-module module-loopback latency_msec=1"
+alias skype='PULSE_PROP="filter.want=echo-cancel" skype'
+#preserve aliases
+#alias sudo="sudo "
+##Status htop, iotop , nethogs, netstats
+alias Dg="sudo ~/scripts/diagnostic.sh; conky &; exit"
+#My favorite folders
+alias vimfm="vifm"
+alias Download="cd /mnt/ntfs/Downloads"
+alias Filmovi="cd /mnt/ntfs/Filmovi/Film"
+alias Serije="cd /mnt/ntfs/Filmovi/Serije"
+
+# Youtube
+alias youtubeplay="mpsyt"
+# Pacman
+# alias pac="pacman"
+alias pacman="pacmatic"
+# '[r]emove [o]rphans' - recursively remove ALL orphaned packages
+alias pacro="/usr/bin/pacman -Qtdq > /dev/null && sudo /usr/bin/pacman -Rns \$(/usr/bin/pacman -Qtdq | sed -e ':a;N;\$!ba;s/\n/ /g')"
+# List changed configuration files
+alias pac_changed_conf="pacman -Qii | awk '/^MODIFIED/ {print $2}'"
+# Plex Media server
+alias plexscan_rescan='sudo ~/scripts/plexScan --scan --refresh'
+alias plexscan='sudo ~/scripts/plexScan'
+
+# Dual-screen
+alias dual-screen='~/.screenlayout/dual.sh'
+alias single-screen='~/.screenlayout/single.sh'
+
+# Rename subtitle to movie/series name
+#
+alias rec='recordmydesktop --device pulse'
+alias renameSubtitles='~/scripts/renameSubtitles.sh'
+alias subtitles-renamer='~/scripts/renameSubtitles.sh'
+#Searching
+alias grep='ack -i'
+#Googledrive sync
+googledrisync() {
+    cd ~/googledrive && grive;
+}
+#Disk SMART utility
+alias smartgui='sudo gsmartcontrol'
+
+# alias v='vim'
+alias vimrc='$EDITOR ~/.vimrc'
+alias vrc='$EDITOR ~/.vimrc'
+alias awrc='$EDITOR ~/.config/awesome/rc.lua'
+alias conkyrc='$EDITOR ~/.conkyrc'
+alias termiterc='$EDITOR ~/.config/termite/config'
+alias urxvtrc='$EDITOR ~/.Xresources'
+alias zrc='$EDITOR ~/.zshrc'
+alias za='$EDITOR ~/dotfiles/zsim/zaliases'
+alias zf='$EDITOR ~/dotfiles/zsim/zfunctions'
+alias fvim='vim $(fzf --height 40%)'
+alias fnv='nv $(fzf --height 40%)'
+
+# This is GOLD for finding out what is taking so much space on your drives!
+alias diskspace="du -S | sort -n -r |more"
+alias hdparm_speed="sudo hdparm -t --direct"
+# Network
+alias myip="curl http://ipecho.net/plain; echo"
+alias lsp="sudo lsof -i -n -P|grep LISTEN"
+#bandwith limiter ---trickle
+# Command line mplayer movie watching for the win.
+alias mp="mplayer -fs"
+# Show me the size (sorted) of only the folders in this directory
+alias folders="find . -maxdepth 1 -type d -print | xargs du -sk | sort -rn"
+#Typos
+alias cd..="cd .."
+alias ..="cd .."
+alias u="cd .."
+#General
+alias wp="cd ~/Toptal/Rhinogram/rhinogram"
+alias wp2="cd ~/Toptal/Rhinogram/secondary/rhinogram"
+alias wpra="cd ~/Toptal/Roomi/api"
+alias wpp="cd ~/openSource/custompoa"
+alias wphs="cd ~/Toptal/honu-hr/honu/server"
+alias wphc="cd ~/Toptal/honu-hr/honu/client"
+# alias ap="cd ~/Toptal/AppFactory/Innovate/"
+alias his="history"
+alias color_pick="zenity --color-selection"
+# alias v="nvim"
+alias nv="nvim"
+alias snv='nvim -u ~/.SpaceVim/vimrc'
+alias killonport="fuser -k -n tcp "
+alias randomKey="cat /dev/urandom | env LC_CTYPE=C tr -dc _A-Za-z0-9 | head -c${1:-64}"
+
+
+# Roomi
+addMyIpJenkins() {
+  aws ec2 authorize-security-group-ingress \
+  --group-id $(aws ec2 describe-security-groups \
+                 --query 'SecurityGroups[*].GroupId' \
+                 --filter 'Name=tag-value,Values=Jenkins CI' \
+                 --output text) \
+  --ip-permissions '[{"IpProtocol": "tcp", 
+                      "FromPort": 443,
+                      "ToPort": 443,
+                      "IpRanges": [{"CidrIp": "'$(curl -s icanhazip.com)'/32",
+                      "Description": "Sime Home '$(date +%m-%d-%Y:%H:%M)'"}]}]'
+}
+# node
+
+addMyIpApi() {
+  aws ec2 authorize-security-group-ingress \
+  --group-id $(aws ec2 describe-security-groups \
+                 --query 'SecurityGroups[*].GroupId' \
+                 --filter 'Name=tag-value,Values=API' \
+                 --output text) \
+  --ip-permissions '[{"IpProtocol": "tcp", 
+                      "FromPort": 22,
+                      "ToPort": 22,
+                      "IpRanges": [{"CidrIp": "'$(curl -s icanhazip.com)'/32",
+                      "Description": "Sime Home/Office '$(date +%m-%d-%Y:%H:%M)'"}]}]'
+}
+addMyIpRedshift() {
+  aws ec2 authorize-security-group-ingress \
+  --group-id $(aws ec2 describe-security-groups \
+                 --query 'SecurityGroups[*].GroupId' \
+                 --filter 'Name=tag-value,Values=Periscope and Kinesis Firehose Inbound' \
+                 --output text) \
+  --ip-permissions '[{"IpProtocol": "tcp", 
+                      "FromPort": 5439,
+                      "ToPort": 5439,
+                      "IpRanges": [{"CidrIp": "'$(curl -s icanhazip.com)'/32",
+                      "Description": "Sime Home/Office '$(date +%m-%d-%Y:%H:%M)'"}]}]'
+}
+
+honuAuthorizeMyIp() {
+  echo $(aws ec2 describe-security-groups \
+                 --query 'SecurityGroups[*].GroupId' \
+                 --filter "Name=tag-value,Values=$1" \
+                 --output text)
+  aws ec2 authorize-security-group-ingress \
+  --group-id $(aws ec2 describe-security-groups \
+                 --query 'SecurityGroups[*].GroupId' \
+                 --filter "Name=tag-value,Values=$1" \
+                 --output text) \
+  --ip-permissions '[{"IpProtocol": "tcp", 
+                      "FromPort": '"$2,"'
+
+                      "ToPort": '"$2,"'
+                      "IpRanges": [{"CidrIp": "'$(curl -s icanhazip.com)'/32",
+                      "Description": "Sime Home/Office '$(date +%m-%d-%Y:%H:%M)'"}]}]'
+}
+# npm 
+alias nr="npm run"
+
+alias disableSwap="sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.dynamic_pager.plist"
+alias enableSwap="sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.dynamic_pager.plistt"

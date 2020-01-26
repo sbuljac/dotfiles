@@ -1,0 +1,42 @@
+#For fun
+#Colors
+BGreen='\e[1;32m'       # Green
+BRed='\e[1;31m'         # Red
+
+echo ${BRed}`date`
+if [ -x /usr/bin/fortune ]; then
+    echo ${BGreen}`/usr/bin/fortune -s`     # Makes our day a bit more fun.... :-)
+fi
+# Exports
+export PATH="$PATH:$HOME/.gem/ruby/2.2.0/bin" # Add RVM to PATH for scripting
+export PATH="/usr/npm_globals/bin:$PATH"  #npm premision fix
+
+#Variables
+PATH_SCRIPTS="~/scripts"
+
+# Disable flow control commands (keeps C-s from freezing everything)
+stty start undef
+stty stop undef
+# Default Programs
+export EDITOR="nvim"
+export PAGER="less"
+export BROWSER="chromium"
+export MOVPLAY="vlc"
+export PICVIEW="feh"
+export SNDPLAY="vlc"
+export TERMINAL="st"
+# export PDFVIEW="evince"
+ 
+# File Extensions
+for ext in html org php com net no ; do alias -s $ext=$BROWSER ; done
+for ext in txt tex py PKGBUID      ; do alias -s $ext=$EDITOR  ; done
+for ext in png jpg gif             ; do alias -s $ext=$PICVIEW ; done
+for ext in mpg wmv avi mkv mp4     ; do alias -s $ext=$MOVPLAY ; done
+for ext in wav mp3 ogg             ; do alias -s $ext=$SNDPLAY ; done
+for ext in pdf         ; do alias -s $ext=$PDFVIEW ; done
+
+# no delay entering normal mode
+# https://coderwall.com/p/h63etq
+# https://github.com/pda/dotzsh/blob/master/keyboard.zsh#L10
+# 10ms for key sequences
+KEYTIMEOUT=1

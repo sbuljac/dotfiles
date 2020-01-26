@@ -1,0 +1,59 @@
+[user]
+	name = sbuljac
+	email = sbuljac@gmail.com
+  username = sbuljac
+[core]
+  editor = nvim
+  autocrlf = input
+	excludesfile = /Users/simebuljac/.gitignore_global
+	pager = less -RFX
+# [merge]
+#   tool = vimdiff
+[merge]
+	tool = intellij
+[mergetool "intellij"]
+	cmd = /Applications/Webstorm.app/Contents/MacOS/webstorm merge $(cd $(dirname $LOCAL) && pwd)/$(basename $LOCAL) $(cd $(dirname $REMOTE) && pwd)/$(basename $REMOTE) $(cd $(dirname $BASE) && pwd)/$(basename $BASE) $(cd $(dirname $MERGED) && pwd)/$(basename $MERGED)
+    trustExitCode = true
+[diff]
+    tool = intellij
+[difftool "intellij"]
+    cmd = /Applications/Webstorm.app/Contents/MacOS/webstorm diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
+[color]
+  ui = true
+[alias]
+  co = checkout
+  ci = commit
+  cam = "commit -a -m"
+  st = status
+  br = branch
+  pl = pull
+  # Delete all local branches but master and the current one, only if they are fully merged with master.
+  br-delete-useless = "!f(){\
+    git branch | grep -v "master" | grep -v ^* | xargs git branch -d;\
+    }; f"
+                         # Delete all local branches but master and the current one.
+  br-delete-useless-force = "!f(){\
+    git branch | grep -v "master" | grep -v ^* | xargs git branch -D;\
+    }; f"
+# [credential]
+#   helper = cache --timeout=3600
+#[credential]
+#	helper = !aws codecommit credential-helper $@
+#	UseHttpPath = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path =
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[commit]
+	template = /Users/simebuljac/.stCommitMsg
+[push]
+	default = current
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[grep]
+	lineNumber = true

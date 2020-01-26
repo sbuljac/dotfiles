@@ -1,0 +1,307 @@
+#!/bin/sh
+#-------- Transmission CLI {{{
+#------------------------------------------------------
+# lightweight torrent daemon, has option for cli, webui, ncurses, and gui frontend
+# demo video: http://www.youtube.com/watch?v=ee4XzWuapsE
+# WebUI:	http://localhost:9091/transmission/web/
+# 		http://192.168.1.xxx:9091/transmission/web/
+tsm() { ~/scripts/blocklist.sh && transmission-daemon && sleep 5 && transmission-remote-cli; }
+tsm-clearcompleted() {
+        transmission-remote -l | grep 100% | grep Done | \
+        awk '{print $1}' | xargs -n 1 -I % transmission-remote -t % -r ;}
+tsm-info() { transmission-remote --list ;}
+	# numbers of ip being blocked by the blocklist
+	# credit: smw from irc #transmission
+tsm-count() { echo "Blocklist rules:" $(curl -s --data \
+	'{"method": "session-get"}' localhost:9091/transmission/rpc -H \
+	"$(curl -s -D - localhost:9091/transmission/rpc | grep X-Transmission-Session-Id)" \
+	| cut -d: -f 11 | cut -d, -f1) ;}
+# demo video: http://www.youtube.com/watch?v=TyDX50_dC0M
+tsm-blocklist() { $PATH_SCRIPTS/blocklist.sh ;}		# update blocklist
+tsm-daemon() { transmission-daemon ;}
+tsm-quit() { killall transmission-daemon ;}
+tsm-altspeedenable() { transmission-remote --alt-speed ;}	# limit bandwidth
+tsm-altspeeddisable() {	transmission-remote --no-alt-speed ;}	# dont limit bandwidth
+# tsm-add() { transmission-remote --add "$1" ;}
+tsm-add() { transmission-remote 192.168.1.1 --add "$1" ;}
+tsm-askmorepeers() { transmission-remote -t"$1" --reannounce ;}
+tsm-pause() { transmission-remote -t"$1" --stop ;}		# <id> or all
+tsm-start() { transmission-remote -t"$1" --start ;}		# <id> or all
+tsm-purge() { transmission-remote -t"$1" --remove-and-delete ;} # delete data also
+tsm-remove() { transmission-remote -t"$1" --remove ;}		# leaves data alone
+#tsm-info() { transmission-remote -t"$1" --info ;}
+tsm-speed() { while true;do clear; transmission-remote -t"$1" -i | grep Speed;sleep 1;done ;}
+
+# https://github.com/fagga/transmission-remote-cli
+# demo video: http://www.youtube.com/watch?v=hLz7ditUwY8
+tsm-ncurse() { transmission-remote-cli ;}
+
+#}}}
+#Make directori and cd
+function mkdircd () { mkdir -p "$@" && eval cd "\"\$$#\"";
+}
+#History--------------------------------------------------------------------------------------
+histMU() {
+  fc -l 1| awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n10
+}
+#Notes--------------------------------------------------------------------------------------
+n() {
+        $EDITOR ~/googledrive/notes/"$*".txt
+}
+
+nls() {
+        ls -c ~/googledrive/notes/ | grep "$*"
+}
+ncat() {
+        cat ~/googledrive/notes/"$*"
+}
+
+#============================================================
+#
+# SET PROXY
+#
+#============================================================
+function proxy_on() {
+    export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+
+    if (( $# > 0 )); then
+        valid=$(echo $@ | sed -n 's/\([0-9]\{1,3\}.\)\{4\}:\([0-9]\+\)/&/p')
+        if [[ $valid != $@ ]]; then
+            >&2 echo "Invalid address"
+            return 1
+        fi
+
+        export http_proxy="http://$1/"
+        export https_proxy=$http_proxy
+        export ftp_proxy=$http_proxy
+        export rsync_proxy=$http_proxy
+        echo "Proxy environment variable set."
+        return 0
+    fi
+
+    echo -n "username: "; read username
+    if [[ $username != "" ]]; then
+        echo -n "password: "
+        # read -es password
+        read password
+        local pre="$username:$password@"
+    fi
+
+    echo -n "server: "; read server
+    echo -n "port: "; read port
+    export http_proxy="http://$pre$server:$port/"
+    export https_proxy=$http_proxy
+    export ftp_proxy=$http_proxy
+    export rsync_proxy=$http_proxy
+    export HTTP_PROXY=$http_proxy
+    export HTTPS_PROXY=$http_proxy
+    export FTP_PROXY=$http_proxy
+    export RSYNC_PROXY=$http_proxy
+}
+
+function proxy_off(){
+    unset http_proxy
+    unset https_proxy
+    unset ftp_proxy
+    unset rsync_proxy
+    echo -e "Proxy environment variable removed."
+}
+#============================================================
+#
+#Camera
+#
+#============================================================
+function camera_off() {
+	sudo rmmod uvcvideo
+}
+function camera_on() {
+	sudo modprobe uvcvideo
+}
+#============================================================
+#Cdg
+#============================================================
+# unalias cdg 2> /dev/null
+cdg() {
+   local dest_dir=$(cdscuts_glob_echo | fzf )
+   if [[ $dest_dir != '' ]]; then
+      cd "$dest_dir"
+   fi
+}
+nvz() {
+  nvim `fzf`
+}
+vlz() {
+  vlc `fzf`
+}
+# export -f cdg > /dev/null
+#============================================================
+#Fzf
+#============================================================
+# fe() {
+#   local file
+#   file=$(fzf --query="$1" --select-1 --exit-0)
+#   [ -n "$file" ] && ${EDITOR:-vim} "$file"
+# }
+# cdf() {
+#   local dir
+#   dir=$(ls| fzf +m) &&
+#   cd "$dir"
+# }
+# fd() {
+#   local dir
+#   dir=$(find ${1:-*} -path '*/\.*' -prune \
+#                   -o -type d -print 2> /dev/null | fzf +m) &&
+#   cd "$dir"
+# }
+# fr() {
+#   local file
+#   file=$(ls| fzf +m) &&
+#   "$file"
+# }
+# # fh - repeat history
+# fh() {
+#   print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
+# }
+# # fkill - kill process
+# fkill() {
+#   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+#
+#   if [ "x$pid" != "x" ]
+#   then
+#     kill -${1:-9} $pid
+#   fi
+# }
+# #Git
+# # fbr - checkout git branch (including remote branches)
+# fbr() {
+#   local branches branch
+#   branches=$(git branch --all | grep -v HEAD) &&
+#   branch=$(echo "$branches" |
+#            fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+#   git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+# }
+#
+# fcoc() {
+#   local commits commit
+#   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
+#   commit=$(echo "$commits" | fzf --tac +s +m -e) &&
+#   git checkout $(echo "$commit" | sed "s/ .*//")
+# }
+#keyboard switch
+keyboard_switch() {
+  local layout
+  layout=$(setxkbmap -print|awk -F "+" '/xkb_symbols/ {print $2}')
+  if [ "$layout" != "us" ]
+  then
+    setxkbmap us
+  else
+    setxkbmap hr
+  fi
+}
+sgh() {
+ git grep $1 $(git rev-list --all -- $2) |fzf
+}
+# git grep with refresh
+ggm() {
+  watch --color "git grep --color=always --ignore-case $1"
+}
+# replace in git repository
+greplace() {
+  git grep -l $1 $3 |xargs gsed -i "s/$1/$2/g";
+}
+gfiles() {
+  git ls-files|fzf|xargs code
+}
+
+,b() {
+  git ls-files|fzf|xargs code
+}
+resetSpotlight() {
+  sudo mdutil -a -i off
+  sudo mdutil -a -i on
+  }
+#============================================================
+#
+### Functions for setting and getting environment variables from the OSX keychain ###
+### Adapted from https://www.netmeister.org/blog/keychain-passwords.html ###
+### and https://gist.github.com/bmhatfield/f613c10e360b4f27033761bbee4404fd ###
+
+# Use: keychain-environment-variable SECRET_ENV_VAR
+#   echos the value
+function keychain-environment-variable() {
+  if [ -z "$1" ]; then
+    print "Missing environment variable name"
+    return 1
+  fi
+
+  security find-generic-password -w -a ${USER} -D "environment variable" -s "${1}"
+}
+
+# Use: set-keychain-environment-variable SECRET_ENV_VAR
+#   security will prompt for the value
+function set-keychain-environment-variable() {
+  if [ -z "$1" ]; then
+    print "Missing environment variable name"
+    return 1
+  fi
+
+  security add-generic-password -U -a ${USER} -D "environment variable" -s "${1}" -w
+}
+
+# Use: delete-keychain-environment-variable SECRET_ENV_VAR
+function delete-keychain-environment-variable() {
+  if [ -z "$1" ]; then
+    print "Missing environment variable name"
+    return 1
+  fi
+
+  security delete-generic-password -a ${USER} -D "environment variable" -s "${1}"
+}
+
+# Terraform
+function terplan() {
+  if [[ -z "$1" ]]; then
+    print "Missing argument"
+    return 1
+  fi
+  if [[ -z "$2" ]]; then
+    print "Missing argument"
+    return 1
+  fi
+
+  terraform plan --target=$1.$2 | landscape
+}
+
+function terimport() {
+  if [[ -z "$1" ]]; then
+    print "Missing argument"
+    return 1
+  fi
+  if [[ -z "$2" ]]; then
+    print "Missing argument"
+    return 1
+  fi
+
+  terraform import $1.$2 $2
+}
+
+function terapply() {
+  if [[ -z "$1" ]]; then
+    print "Missing argument"
+    return 1
+  fi
+  if [[ -z "$2" ]]; then
+    print "Missing argument"
+    return 1
+  fi
+
+  terraform apply --target=$1.$2 | landscape
+}
+
+function getPassword() {
+  security find-generic-password -j $1 -w
+}
+check_run() {
+  echo "$changed_files" | \grep --quiet "$1" && eval "$2"
+}
+
