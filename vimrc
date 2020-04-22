@@ -11,15 +11,19 @@ if has('nvim') " got problem with vim-sensible in neovim
 endif
 
 " Macvim
-" set guifont=Menlo:h12
+if has("gui_macvim")
+  set guifont=Menlo:h16
+  set incsearch
+  set clipboard+=unnamed
+else
+  set clipboard+=unnamedplus
+endif
 " Plugins {{{
 call plug#begin('~/.vim/bundle')
 Plug 'tpope/vim-rsi'
 
 nnoremap <F5> :e!<CR>
 nnoremap <F6> :MundoToggle<CR>
-" nnoremap <F7> :UpdateTags<CR>
-" nnoremap <F8> :TagbarToggle<CR>
 
 if !has('nvim')
 Plug 'tpope/vim-sensible'
@@ -32,56 +36,75 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-ragtag'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-dispatch'
+" Plug 'tpope/vim-vinegar'
 
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
-Plug 'wellle/targets.vim'
-let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+" let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 Plug 'tomtom/tcomment_vim'                " Toggle comments for selected region
-Plug 'mtth/scratch.vim'
 
 
 Plug 'sheerun/vim-polyglot'
 Plug 'jparise/vim-graphql'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-dispatch'
 Plug 'radenling/vim-dispatch-neovim'
-Plug 'tommcdo/vim-exchange'
-Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'} | Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
-nmap ]h <Plug>(GitGutterNextHunk)
-nmap [h <Plug>(GitGutterPrevHunk)
+nmap [c <Plug>(GitGutterPrevHunk)
+nmap ]c <Plug>(GitGutterNextHunk)
 
-Plug 'simnalamburt/vim-mundo'
+" Plug 'simnalamburt/vim-mundo'
 " Plug 'embear/vim-localvimrc'
 
-Plug 'morhetz/gruvbox'
+" Plug 'morhetz/gruvbox'
 Plug 'joshdick/onedark.vim'
 "
 
-Plug 'lfilho/cosco.vim'
 Plug 'gioele/vim-autoswap'
-Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}
-Plug 'kana/vim-textobj-user' | Plug 'kana/vim-textobj-entire'
-Plug 'kana/vim-textobj-function' | Plug 'thinca/vim-textobj-function-javascript'
+" Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}
+" Plug 'kana/vim-textobj-user' | Plug 'kana/vim-textobj-entire'
+" Plug 'kana/vim-textobj-function' | Plug 'thinca/vim-textobj-function-javascript'
 
 " new stuff
 Plug 'honza/vim-snippets'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+" check this plugin again
+" Plug 'Konfekt/FastFold'
+" nmap zuz <Plug>(FastFoldUpdate)
+" let g:fastfold_minlines = 0
+" let g:fastfold_savehook = 1
+" let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
+" let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+"
+" let g:fastfold_savehook = 1
+" let g:markdown_folding = 1
+" let g:tex_fold_enabled = 1
+" let g:vimsyn_folding = 'af'
+" let g:xml_syntax_folding = 1
+" let g:javaScript_fold = 1
+" let g:sh_fold_enabled= 7
+" let g:ruby_fold = 1
+" let g:perl_fold = 1
+" let g:perl_fold_blocks = 1
+" let g:r_syntax_folding = 1
+" let g:rust_fold = 1
+" let g:php_folding = 1
+
+" Plug 'kkoomen/vim-doge'
+
 " Plug 'lukhio/vim-mapping-conflicts'
 
-" Generate JSDoc commands based on function signature
-Plug 'heavenshell/vim-jsdoc'
-Plug 'tpope/vim-vinegar'
 Plug 'kassio/neoterm'
-if !exists('veonim')
+" if !exists('veonim')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+let g:coc_node_path = '/usr/local/bin/node'
 
 "To load fzf plugin
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
-endif
+" Plug '/usr/local/opt/fzf'
+" Plug 'junegunn/fzf.vim'
+" endif
 
 let g:neoterm_default_mod='botright'
 let g:neoterm_size=30
@@ -89,52 +112,25 @@ let g:neoterm_autoscroll=1
 let g:neoterm_autoinsert=1
 " Enable syntax highlighting for JSDoc
 let g:javascript_plugin_jsdoc = 1
-" Generate jsdoc for function under cursor
-nmap <leader>z :JsDoc<CR>
 call plug#end() "}}}
 if !has('nvim')
 runtime! plugin/sensible.vim
 endif
 "General options "{{{
-set foldlevel=99
+" set foldlevel=99
 
 " let mapleader = "<space>"
 map <Space> <Leader>
 
 " Enable true color support
 set termguicolors
-let g:gruvbox_contrast_dark='medium'
-" let g:gruvbox_contrast_light='hard'
-" let g:gruvbox_italic=1
-"
-let g:airline_theme='gruvbox'
-" let g:oceanic_next_terminal_bold = 1
-" let g:oceanic_next_terminal_italic = 1
-"
-" Editor theme
-" set background=dark
-" colorscheme solarized
+let g:airline_theme='onedark'
+
 try
-  " colorscheme gruvbox
   colorscheme onedark
 catch
   colorscheme slate
 endtry
-
-" Vim airline theme
-" let g:airline_theme='space'
-
-" function! MyHighlights() abort
-"   " Hightlight trailing whitespace
-"   highlight Trail ctermbg=red guibg=red
-"   call matchadd('Trail', '\s\+$', 100)
-" endfunction
-"
-" augroup MyColors
-"   autocmd!
-"    autocmd ColorScheme * call MyHighlights()
-" augroup END
-"
 
 set background=dark
 
@@ -154,8 +150,8 @@ set noshowmode    " Show mode is useless with airline
 set number        " Enable line numbers
 set textwidth=120 " Max text length at 120 symbols
 set shiftwidth=2 tabstop=2 expandtab
-set clipboard+=unnamedplus
-set foldmethod=marker
+set foldmethod=manual
+
 " set colorcolumn=121
 set spelllang=en_us
 " set pastetoggle=<leader>p " toggle paste mode on ,p
@@ -174,13 +170,14 @@ set diffopt+=vertical " open diff in horizontal buffer
 set diffopt+=iwhite     " ignore changes in whitespace characters
 set gdefault            " add the g flat to search/replace ba default
 set hlsearch            " highlight search results
-set ignorecase
+set smartcase
 set wildcharm=<TAB>
 set wildmode=list:longest,longest:full
 set completeopt=longest,menuone
 set complete+=kspell "dictionary in completion but only when spell check is on "}}}
 set nospell
 set mouse=a
+set autoread
 
 " Plugins setup " {{{
 
@@ -202,24 +199,14 @@ let NERDTreeMinimalUI=1   "Disable bookmarks label, and hint about '?'
 "}}}
 " Autocmd {{{
 if has("autocmd")
+autocmd BufWinEnter * if line2byte(line("$") + 1) > 1000000 | syntax clear | endif
 augroup FToptions
 autocmd!
 autocmd FileType gitcommit setlocal spell
 " autocmd FileType html,css EmmetInstall
 autocmd FileType html set complete+=k
 autocmd FileType html set omnifunc=syntaxcomplete#Complete
-" autocmd FileType html,css,javascript let &tags=<SID>fzf_root() . "/tags"
-" autocmd FileType html,css,javascript let g:easytags_file=<SID>fzf_root() . "/tags"
 
-augroup cosco
-autocmd!
-autocmd FileType javascript,css nnoremap <silent> <Leader>; :call cosco#commaOrSemiColon()<CR>
-autocmd FileType javascript,css inoremap <silent> <Leader>; <esc>:call cosco#commaOrSemiColon()<CR>
-augroup END
-
-" if (has('nvim') && &ft!='html')
-" autocmd! BufWritePost * Neomake
-" endif
 augroup vimrcEx
 autocmd!
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
@@ -234,7 +221,8 @@ augroup END
 augroup completion
 autocmd!
 " autocmd   FileType   javascript        setlocal omnifunc=tern#Complete
-autocmd   FileType   javascript        setlocal foldmethod=syntax
+" autocmd   FileType   javascript        setlocal foldmethod=syntax
+" autocmd   FileType   json        setlocal foldmethod=syntax
 autocmd   FileType   markdown          setlocal nolist wrap linebreak textwidth=78 spell
 autocmd   FileType   help              nnoremap <silent><buffer> q :q<CR>
 autocmd   FileType   qf              nnoremap <silent><buffer> q :q<CR>
@@ -283,24 +271,31 @@ nmap <silent> <leader>gca :Gcommit -a<cr>
 nmap <silent> <leader>gcf :Gcommit -a --amend<cr>
 " noremap <Leader>gr :Gsearch<space>
 " noremap <space>t :Tags<cr>
-noremap <Leader>gr :RG<CR>
+
+" command! -nargs=+ -complete=custom,s:GrepArgs Rg exe 'CocList grep '.<q-args>
+"
+" function! s:GrepArgs(...)
+"   let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
+"         \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
+"   return join(list, "\n")
+" endfunction
+
+" Keymapping for grep word under cursor with interactive mode
 
 nnoremap n nzz
 nnoremap `` ``zz
 " Count the number of matches of the searched word
-noremap <leader>c :%s///gn<cr>
+" noremap <leader>c :%s///gn<cr>
 " Copy reference
-noremap <leader>cr :let @* = join([expand('%'),  line(".")], ':')<cr>
+noremap <leader>yr :let @* = join([expand('%'),  line(".")], ':')<cr>
 
 noremap g. za
 noremap g/ gcc
 
-nnoremap <silent> <leader>b :GitFiles<CR>
-nnoremap <silent> <leader>p :GitFiles<CR>
-nnoremap <silent> <leader>m :FZF<CR>
-nnoremap <silent> <leader><leader> :Buffers<cr>
-nnoremap <silent> q/ :History/<cr>
-nnoremap <silent> q: :History:<cr>
+nnoremap <silent> <leader>b :CocList mru<CR>
+nnoremap <silent> <leader>p :CocList files<CR>
+" nnoremap <silent> <leader>m :GitFiles<CR>
+" nnoremap <silent> <leader><leader> :Buffers<cr>
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -350,9 +345,17 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+" restart when tsserver gets wonky
+nnoremap <silent> <leader>cR  :<C-u>CocRestart<CR>
+" view all errors
+nnoremap <silent> <leader>cl  :<C-u>CocList locationlist<CR>
+
+
+nnoremap <silent> gf :vertical wincmd F <bar> wincmd L<CR>
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> gh :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -375,11 +378,11 @@ nmap <leader>f  <Plug>(coc-format-selected)
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+autocmd!
+" Setup formatexpr specified filetype(s).
+autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+" Update signature help on jump placeholder
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
@@ -388,8 +391,26 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
+" nmap <leader>ac  :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
+" Mappings using CoCList:
+" Show all diagnostics.
+" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent> <space>ce  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent> <space>cc  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent> <space>cr  :<C-u>CocListResume<CR>
 
 " Create mappings for function text object, requires document symbols feature of languageserver.
 xmap if <Plug>(coc-funcobj-i)
@@ -423,7 +444,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Find symbol of current document
 " nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
-" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+nnoremap <silent> <space>gs  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
 " nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
@@ -449,24 +470,28 @@ let g:coc_snippet_next = '<tab>'
 " hi! link CocErrorSign WarningMsg
 hi! link CocWarningSign Number
 hi! link CocInfoSign Type
+	" make error texts have a red color
+highlight CocErrorHighlight ctermfg=Red  guifg=#ff0000
+hi CocErrorSign  ctermfg=Red guifg=#ff0000
 
 
-nnoremap <silent> <leader>fn :NERDTreeToggle<CR>
+nnoremap <silent> <leader>dt :NERDTreeToggle<CR>
+nnoremap <silent> <leader>df :NERDTreeFind<CR>
 nnoremap <silent> <c-\> :NERDTreeToggle<CR>
 
 map <leader>w <C-w>w
 
 if has('nvim')
 tnoremap <Esc> <C-\><C-n>
-tnoremap <C-w>h <C-\><C-n><C-w>h
-tnoremap <C-w>k <C-\><C-n><C-w>k
-tnoremap <C-w>j <C-\><C-n><C-w>j
-tnoremap <C-w>l <C-\><C-n><C-w>l
-" tnoremap <A-h> <C-\><C-n><C-w>h
-" tnoremap <A-j> <C-\><C-n><C-w>W
-" tnoremap <A-k> <C-\><C-n><C-w>w
-" tnoremap <A-l> <C-\><C-n><C-w>l
-" tnoremap <A-l> <C-\><C-n><leader>w
+" tnoremap <C-w>h <C-\><C-n><C-w>h
+" tnoremap <C-w>k <C-\><C-n><C-w>k
+" tnoremap <C-w>j <C-\><C-n><C-w>j
+" tnoremap <C-w>l <C-\><C-n><C-w>l
+tnoremap <A-h> <C-\><C-n><C-w>h
+tnoremap <A-j> <C-\><C-n><C-w>W
+tnoremap <A-k> <C-\><C-n><C-w>w
+tnoremap <A-l> <C-\><C-n><C-w>l
+tnoremap <A-l> <C-\><C-n><leader>w
 tnoremap <M-m> <C-\><C-n>:MaximizerToggle<CR>
 endif
 
@@ -496,29 +521,6 @@ noremap <Leader>q :copen<cr><cr>
 nnoremap <CR> o<Esc>
 "to be consistent with C and D
 nnoremap Y y$
-" FZF mapings
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-" Insert mode completion
-" imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-fun! s:fzf_root()
-let path = finddir(".git", expand("%:p:h").";")
-return fnamemodify(substitute(path, ".git", "", ""), ":p:h")
-endfun
-
-nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
-" nnoremap <silent> <c-h> :Helptags<CR>
-" nnoremap <silent> <Leader>h :Helptags<CR>
-" nnoremap <silent> <C-f> :silent !standard % --format > /dev/null<CR>
-" nnoremap <silent> <C-f> :silent Neomake! standardjs<CR>
-" nnoremap <leader>r :e!\|Neomake<CR>
 " select text just pasted
 noremap gV `[v`]
 
@@ -566,35 +568,9 @@ endfunction
 xnoremap * :<C-u>call <SID>VSetSearch()<CR>/<C-R>=@/<CR><CR>
 xnoremap # :<C-u>call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
 
-command! -bang -nargs=* GGrep
-  \ call fzf#vim#grep(
-  \   'git grep --line-number '.shellescape(<q-args>), 0,
-  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
-
-
-function! RipgrepFzf(path,query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s '.a:path.'|| true'
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, '', <bang>0)
-
-function! CustomTerminalOpen() 
-  Topen
-  " wincmd J
-  " resize 30
-endfunction
-
-function! CustomTerminalClose() 
-  Tclose
-endfunction
-
-nnoremap <leader>to :call  CustomTerminalOpen()<cr>
-nnoremap <leader>tc :call CustomTerminalClose()<cr>
-tnoremap <leader>tc <C-\><C-n>:call CustomTerminalClose()<cr>
+nnoremap <leader>to :Topen<cr>
+nnoremap <leader>tc :Tclose<cr>
+tnoremap <leader>tc <C-\><C-n>:Tclose<cr>
 
 
 nnoremap <Left> :vertical resize +2<CR>
@@ -657,42 +633,24 @@ catch
 endtry
 
 
-" Using floating windows of Neovim to start fzf
-" if has('nvim')
-"   let $FZF_DEFAULT_OPTS .= ' --border --margin=0,2'
-"
-"   function! FloatingFZF()
-"     let width = float2nr(&columns * 0.9)
-"     let height = float2nr(&lines * 0.6)
-"     let opts = { 'relative': 'editor',
-"                \ 'row': (&lines - height) / 2,
-"                \ 'col': (&columns - width) / 2,
-"                \ 'width': width,
-"                \ 'height': height }
-"
-"     let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-"     call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
-"   endfunction
-"
-"   let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-" endif
-
-
 if has('nvim')
   let $GIT_EDITOR = 'nvr -cc split --remote-wait'
 endif
 autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 
-if has('nvim')
-  " go into insert mode when switching to terminal
-  " au BufEnter * if &buftype == 'terminal' | :startinsert | endif
-endif
 
-" FORMATTERS
-au FileType javascript setlocal formatprg=prettier
-au FileType javascript.jsx setlocal formatprg=prettier
-au FileType typescript setlocal formatprg=prettier\ --parser\ typescript
-au FileType html setlocal formatprg=prettier\ --parser\ html
-au FileType scss setlocal formatprg=prettier\ --parser\ css
-au FileType css setlocal formatprg=prettier\ --parser\ css
+"Fzf setup
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+nnoremap <silent> <Leader>gr :exe 'RG '.expand('<cword>')<CR>

@@ -13,6 +13,7 @@ PATH_SCRIPTS="~/scripts"
 if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
   export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
   export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  alias nv="nvr -cc split --remote-wait +'set bufhidden=wipe'"
 else
 export EDITOR="nvim"
   export VISUAL="nvim"

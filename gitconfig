@@ -12,12 +12,12 @@
 [merge]
 	tool = intellij
 [mergetool "intellij"]
-	cmd = /Applications/Webstorm.app/Contents/MacOS/webstorm merge $(cd $(dirname $LOCAL) && pwd)/$(basename $LOCAL) $(cd $(dirname $REMOTE) && pwd)/$(basename $REMOTE) $(cd $(dirname $BASE) && pwd)/$(basename $BASE) $(cd $(dirname $MERGED) && pwd)/$(basename $MERGED)
+	cmd = "/Users/simebuljac/Library/Application\\ Support/JetBrains/Toolbox/apps/WebStorm/ch-0/193.5662.54/WebStorm.app/Contents/MacOS/webstorm" merge $(cd $(dirname $LOCAL) && pwd)/$(basename $LOCAL) $(cd $(dirname $REMOTE) && pwd)/$(basename $REMOTE) $(cd $(dirname $BASE) && pwd)/$(basename $BASE) $(cd $(dirname $MERGED) && pwd)/$(basename $MERGED)
     trustExitCode = true
 [diff]
     tool = intellij
 [difftool "intellij"]
-    cmd = /Applications/Webstorm.app/Contents/MacOS/webstorm diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
+    cmd = "/Users/simebuljac/Library/Application\\ Support/JetBrains/Toolbox/apps/WebStorm/ch-0/193.5662.54/WebStorm.app/Contents/MacOS/webstorm" diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
 [color]
   ui = true
 [alias]
@@ -35,17 +35,6 @@
   br-delete-useless-force = "!f(){\
     git branch | grep -v "master" | grep -v ^* | xargs git branch -D;\
     }; f"
-# [credential]
-#   helper = cache --timeout=3600
-#[credential]
-#	helper = !aws codecommit credential-helper $@
-#	UseHttpPath = true
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [commit]
 	template = /Users/simebuljac/.stCommitMsg
 [push]

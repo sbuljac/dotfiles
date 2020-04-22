@@ -30,7 +30,7 @@ function ${1:function_name} (${2:argument}) {
 }$0
 endsnippet
 snippet cl "console log standard style" b
-console.log(${1:'Test'})
+console.log(${1});
 endsnippet
 snippet f "anonymus function" w
 (${1}) => {
@@ -48,13 +48,13 @@ endsnippet
 
 # JSDoc snippets
 
-# snippet /* "A JSDoc comment" b
-# /**
-#  * ${1:${VISUAL}}$0
-#  */
-# endsnippet
+snippet ** "A JSDoc comment" b
+/**
+ * ${1:${VISUAL}}$0
+ */
+endsnippet
 
-snippet @p "@param {Type} varname Description" w
+snippet @param "@param {Type} varname Description" w
 @param {${1:Type}} ${2:varname} ${3:Description}
 endsnippet
 

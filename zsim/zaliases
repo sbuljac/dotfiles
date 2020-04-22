@@ -209,3 +209,6 @@ alias nr="npm run"
 
 alias disableSwap="sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.dynamic_pager.plist"
 alias enableSwap="sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.dynamic_pager.plistt"
+
+alias neovimqt="NVIM_QT_RUNTIME_PATH=~/openSource/neovim-qt/build/src/gui/runtime ~/openSource/neovim-qt/build/bin/nvim-qt.app/Contents/MacOS/nvim-qt
+"
